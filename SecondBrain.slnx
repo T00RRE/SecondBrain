@@ -1,1 +1,11 @@
-<Solution />
+<Solution>
+  <Project Path="SecondBrain.Api/SecondBrain.Api.csproj" />
+  <Project Path="SecondBrain.Application/SecondBrain.Application.csproj" />
+  <Project Path="SecondBrain.Domain/SecondBrain.Domain.csproj" />
+  <Project Path="SecondBrain.Infrastructure/SecondBrain.Infrastructure.csproj" />
+  <Project Path="SecondBrain.Web/secondbrain.web.client/secondbrain.web.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="SecondBrain.Web/SecondBrain.Web.Server/SecondBrain.Web.Server.csproj" />
+</Solution>
