@@ -1,0 +1,12 @@
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Domain\obj\Debug\net8.0\SecondBrain.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Domain\obj\Debug\net8.0\SecondBrain.Domain.AssemblyInfoInputs.cache
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Domain\obj\Debug\net8.0\SecondBrain.Domain.AssemblyInfo.cs
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Domain\obj\Debug\net8.0\SecondBrain.Domain.csproj.CoreCompileInputs.cache
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Domain\obj\Debug\net8.0\SecondBrain.Domain.sourcelink.json
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Domain\bin\Debug\net8.0\SecondBrain.Domain.deps.json
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Domain\bin\Debug\net8.0\SecondBrain.Domain.dll
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Domain\bin\Debug\net8.0\SecondBrain.Domain.pdb
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Domain\obj\Debug\net8.0\SecondBrain.Domain.dll
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Domain\obj\Debug\net8.0\refint\SecondBrain.Domain.dll
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Domain\obj\Debug\net8.0\SecondBrain.Domain.pdb
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Domain\obj\Debug\net8.0\ref\SecondBrain.Domain.dll

@@ -1,9 +1,9 @@
 {
 "SpaProxyServer": {
-"ServerUrl": "",
+"ServerUrl": "https://localhost:52246",
 "RedirectUrl": "",
-"LaunchCommand": "",
-"WorkingDirectory": "C:\\Users\\mankf\\Desktop\\Inżynier\\SecondBrain\\SecondBrain.Web\\SecondBrain.Web.Server",
+"LaunchCommand": "npm run dev",
+"WorkingDirectory": "C:\\Users\\mankf\\Desktop\\Inżynier\\SecondBrain\\SecondBrain.Web\\SecondBrain.Web.Server\\..\\secondbrain.web.client",
 "MaxTimeoutInSeconds": "120",
 "KeepRunning": "false"
 }
