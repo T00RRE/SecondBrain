@@ -130,7 +130,7 @@ namespace SecondBrain.Infrastructure.Data
                 entity.HasOne(d => d.ParentTask)
                     .WithMany(p => p.Subtasks)
                     .HasForeignKey(d => d.ParentTaskId)
-                    .OnDelete(DeleteBehavior.SetNull); // Domyślnie CASCADE, SetNull jest bezpieczniejszy
+                    .OnDelete(DeleteBehavior.Restrict); // Zmieniono z SetNull na Restrict, aby przerwać cykl kaskadowy
 
                 // Relacje do TaskCategory i TaskPriority
                 entity.HasOne(d => d.Category).WithMany(c => c.Tasks).HasForeignKey(d => d.CategoryId).OnDelete(DeleteBehavior.SetNull);
@@ -141,7 +141,16 @@ namespace SecondBrain.Infrastructure.Data
             });
 
             // 6. TaskCategories, 8. TaskPriorities - Standardowe tabele słownikowe
-            modelBuilder.Entity<TaskCategory>(e => e.Property(c => c.Name).IsRequired().HasMaxLength(100));
+            modelBuilder.Entity<TaskCategory>(entity =>
+            {
+                entity.Property(c => c.Name).IsRequired().HasMaxLength(100);
+                // Przerwanie kaskady względem User
+                entity.HasOne(e => e.User)
+                    .WithMany()
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Restrict); // <--- KLUCZOWA ZMIANA
+            });
+
             modelBuilder.Entity<TaskPriority>(e => e.Property(p => p.Name).IsRequired().HasMaxLength(50));
 
             // 9. RecurringTaskTemplates
@@ -151,6 +160,18 @@ namespace SecondBrain.Infrastructure.Data
             modelBuilder.Entity<RecurringTaskInstance>(entity =>
             {
                 entity.HasIndex(e => new { e.TemplateId, e.ScheduledDate }).IsUnique();
+
+                // Relacja: Instance -> Task. Przerwanie kaskady względem Task
+                entity.HasOne(e => e.Task)
+                    .WithMany()
+                    .HasForeignKey(e => e.TaskId)
+                    .OnDelete(DeleteBehavior.Restrict); // Zmieniono z Cascade na Restrict
+
+                // Relacja do TemplateId pozostaje Cascade
+                entity.HasOne(e => e.Template)
+                    .WithMany(t => t.Instances)
+                    .HasForeignKey(e => e.TemplateId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             // 12. TaskHistory - FK do ChangedBy (User)
@@ -188,18 +209,64 @@ namespace SecondBrain.Infrastructure.Data
             {
                 entity.HasIndex(e => new { e.HabitId, e.DayOfWeek }).IsUnique();
             });
+            modelBuilder.Entity<HabitCompletion>(entity =>
+            {
+                // Przyjmujemy standardową precyzję 18 cyfr, 2 po przecinku
+                entity.Property(e => e.Value).HasPrecision(18, 2);
+            });
 
+            // HabitCategory - przerwanie kaskady względem User
+            modelBuilder.Entity<HabitCategory>(entity =>
+            {
+                entity.HasOne(e => e.User)
+                    .WithMany()
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Restrict); // <--- KLUCZOWA ZMIANA
+            });
+            modelBuilder.Entity<HabitCompletion>(entity =>
+            {
+                // Przyjmujemy standardową precyzję 18 cyfr, 2 po przecinku
+                entity.Property(e => e.Value).HasPrecision(18, 2);
+                // ...
+            });
 
             // --- MODUŁ 4: DAILY REVIEW ---
 
             // 19. TimeCategories
-            modelBuilder.Entity<TimeCategory>(e => e.Property(c => c.Name).IsRequired().HasMaxLength(100));
+            modelBuilder.Entity<TimeCategory>(entity =>
+            {
+                entity.Property(c => c.Name).IsRequired().HasMaxLength(100);
+                // Przerwanie kaskady względem User
+                entity.HasOne(e => e.User)
+                    .WithMany()
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Restrict); // KLUCZOWA ZMIANA
+            });
+
+            // 20. TimeBlockTemplateItem - przerwanie kaskady względem TimeCategory
+            modelBuilder.Entity<TimeBlockTemplateItem>(entity =>
+            {
+                entity.HasOne(e => e.Category)
+                    .WithMany(c => c.TemplateItems)
+                    .HasForeignKey(e => e.CategoryId)
+                    .OnDelete(DeleteBehavior.Restrict); // KLUCZOWA ZMIANA
+            });
 
             // 20. TimeBlocks (Relacje)
             modelBuilder.Entity<TimeBlock>(entity =>
             {
-                entity.HasOne(d => d.Category).WithMany(c => c.TimeBlocks).HasForeignKey(d => d.CategoryId).OnDelete(DeleteBehavior.Restrict); // Nie kasuj kategorii po usunięciu TimeBlock
+                // Przerwanie kaskady względem User
+                entity.HasOne(e => e.User)
+                    .WithMany(u => u.TimeBlocks)
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Restrict); // <--- KLUCZOWA I OSTATECZNA ZMIANA
+
+                // Relacja do TimeCategories pozostaje RESTRICT
+                entity.HasOne(d => d.Category).WithMany(c => c.TimeBlocks).HasForeignKey(d => d.CategoryId).OnDelete(DeleteBehavior.Restrict);
+
+                // Relacja do Task pozostaje SET NULL
                 entity.HasOne(d => d.Task).WithMany().HasForeignKey(d => d.TaskId).OnDelete(DeleteBehavior.SetNull);
+
                 // W TimeBlock usunięto pola string Category i Color na rzecz FK
             });
 
@@ -207,6 +274,7 @@ namespace SecondBrain.Infrastructure.Data
             modelBuilder.Entity<DailyReviewStatus>(entity =>
             {
                 entity.HasIndex(e => new { e.UserId, e.ReviewDate }).IsUnique();
+                entity.Property(e => e.ProductiveHours).HasPrecision(18, 2);
             });
 
 
