@@ -1,1 +1,32 @@
 .vs/
+# Build folders
+bin/
+obj/
+
+# Visual Studio files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / IDE
+.idea/
+.vscode/
+
+# NuGet
+*.nupkg
+packages/
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# OS generated files
+Thumbs.db
+.DS_Store
+
+# Others
+project.lock.json
+project.assets.json
+*.ncrunch*
