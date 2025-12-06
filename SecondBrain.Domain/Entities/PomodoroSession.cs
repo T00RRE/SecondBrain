@@ -1,28 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using global::SecondBrain.Domain.Common;
-using SecondBrain.Domain.Enums;
+﻿// Entities/PomodoroSession.cs (Poprawiona)
+using System;
+using SecondBrain.Domain.Common;
+// using SecondBrain.Domain.Enums; // Zakładamy, że PomodoroType jest Enumem
 
 namespace SecondBrain.Domain.Entities
 {
     public class PomodoroSession : BaseEntity
     {
+        public int UserId { get; set; }
+        public int? TaskId { get; set; }
+
+        public string SessionType { get; set; } = "work"; // "work", "short_break", "long_break"
+
+        // Poprawiono nazwy pól
+        public int PlannedDuration { get; set; }
+        public int? ActualDuration { get; set; }
+
         public DateTime StartTime { get; set; }
         public DateTime? EndTime { get; set; }
-        public int DurationMinutes { get; set; } = 25;
-        public PomodoroType Type { get; set; } = PomodoroType.Work;
         public bool IsCompleted { get; set; } = false;
+        public bool IsInterrupted { get; set; } = false; // Dodane
         public string? Note { get; set; }
 
-        // Opcjonalne powiązanie z zadaniem
-        public int? TaskId { get; set; }
-        public Task? Task { get; set; }
-
-        // Użytkownik
-        public int UserId { get; set; }
         public User User { get; set; } = null!;
+        public Task? Task { get; set; }
     }
 }

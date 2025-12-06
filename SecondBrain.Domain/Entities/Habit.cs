@@ -1,9 +1,6 @@
-﻿using System;
+﻿// Entities/Habit.cs (Poprawiona)
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using SecondBrain.Domain.Common;
 
 namespace SecondBrain.Domain.Entities
@@ -12,20 +9,29 @@ namespace SecondBrain.Domain.Entities
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public string? Icon { get; set; } 
-        public string Color { get; set; } = "#4A90E2"; 
 
-        // Kiedy wykonywać
-        public bool IsDaily { get; set; } = true;
-        public string? SpecificDays { get; set; } // JSON "[1,3,5]" = Pon, Śr, Pt
+        // Zmieniono na FK do HabitCategory
+        public int? CategoryId { get; set; }
+        public HabitCategory? Category { get; set; } // FK → HabitCategories
 
-        // Streak tracking
-        public int CurrentStreak { get; set; } = 0;
-        public int BestStreak { get; set; } = 0;
+        public string? Icon { get; set; }
+        public string Color { get; set; } = "#4A90E2";
+
+        // Pola dla mierzalnych nawyków
+        public string TargetType { get; set; } = "daily"; // "daily", "weekly", "monthly"
+        public int TargetCount { get; set; } = 1;
+        public string? Unit { get; set; } // "minutes", "pages", "km"
+
+        public bool IsActive { get; set; } = true;
+        public int UserId { get; set; }
+
+        // Usunięto pola streak (CurrentStreak, BestStreak) na rzecz dedykowanej encji HabitStreak
 
         // Relacje
-        public int UserId { get; set; }
         public User User { get; set; } = null!;
+        public HabitStreak? Streak { get; set; } // Relacja jeden-do-jednego
         public ICollection<HabitCompletion> Completions { get; set; } = new List<HabitCompletion>();
+        public ICollection<HabitSchedule> Schedules { get; set; } = new List<HabitSchedule>();
+        public ICollection<HabitReminder> Reminders { get; set; } = new List<HabitReminder>();
     }
 }

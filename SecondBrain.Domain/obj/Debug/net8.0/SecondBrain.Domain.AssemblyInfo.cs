@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SecondBrain.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7282495d191d2b8d9a8ff76b33560d9cef7e7744")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cc7cb7791b41da0497ba7549c64fc817f2f39377")]
 [assembly: System.Reflection.AssemblyProductAttribute("SecondBrain.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SecondBrain.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

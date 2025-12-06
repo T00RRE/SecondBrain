@@ -14,4 +14,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SecondBrain.Infrastructure\SecondBrain.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

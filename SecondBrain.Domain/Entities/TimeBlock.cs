@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Entities/TimeBlock.cs (Poprawiona)
+using System;
 using SecondBrain.Domain.Common;
 
 namespace SecondBrain.Domain.Entities
@@ -14,10 +11,14 @@ namespace SecondBrain.Domain.Entities
         public TimeSpan EndTime { get; set; }
         public string Activity { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public string Category { get; set; } = string.Empty; // "Praca", "Nauka", "Sport"
-        public string Color { get; set; } = "#6B7280";
 
-        // Użytkownik
+        // Zmieniono sztywną kategorię na FK i relacje
+        public int CategoryId { get; set; }
+        public TimeCategory Category { get; set; } = null!; // FK → TimeCategories
+
+        public int? TaskId { get; set; }
+        public Task? Task { get; set; } // FK → Tasks (Opcjonalne powiązanie)
+
         public int UserId { get; set; }
         public User User { get; set; } = null!;
     }

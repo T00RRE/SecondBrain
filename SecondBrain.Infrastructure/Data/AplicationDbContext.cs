@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SecondBrain.Domain.Entities;
+using SecondBrain.Domain.Common;
 
 namespace SecondBrain.Infrastructure.Data
 {
@@ -10,118 +11,255 @@ namespace SecondBrain.Infrastructure.Data
         {
         }
 
-        // DbSet dla każdej tabeli
-        public DbSet<User> Users { get; set; }
-        public DbSet<Domain.Entities.Task> Tasks { get; set; }
-        public DbSet<Habit> Habits { get; set; }
-        public DbSet<HabitCompletion> HabitCompletions { get; set; }
-        public DbSet<PomodoroSession> PomodoroSessions { get; set; }
-        public DbSet<TimeBlock> TimeBlocks { get; set; }
+        // ===================================================================
+        // 1. DbSet dla wszystkich Encji
+        // ===================================================================
+
+        // MODUŁ 1: USER & PROFILES
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<UserProfile> UserProfiles { get; set; } = null!;
+        public DbSet<UserSettings> UserSettings { get; set; } = null!;
+        public DbSet<Notification> Notifications { get; set; } = null!;
+        public DbSet<ActivityLog> ActivityLogs { get; set; } = null!;
+        public DbSet<UserStat> UserStats { get; set; } = null!;
+
+        // MODUŁ 2: TASKS
+        public DbSet<Domain.Entities.Task> Tasks { get; set; } = null!;
+        public DbSet<TaskCategory> TaskCategories { get; set; } = null!;
+        public DbSet<TaskPriority> TaskPriorities { get; set; } = null!;
+        public DbSet<RecurringTaskTemplate> RecurringTaskTemplates { get; set; } = null!;
+        public DbSet<RecurringTaskInstance> RecurringTaskInstances { get; set; } = null!;
+        public DbSet<TaskComment> TaskComments { get; set; } = null!;
+        public DbSet<TaskHistory> TaskHistory { get; set; } = null!;
+
+        // MODUŁ 3: HABITS
+        public DbSet<Habit> Habits { get; set; } = null!;
+        public DbSet<HabitCategory> HabitCategories { get; set; } = null!;
+        public DbSet<HabitSchedule> HabitSchedules { get; set; } = null!;
+        public DbSet<HabitCompletion> HabitCompletions { get; set; } = null!;
+        public DbSet<HabitStreak> HabitStreaks { get; set; } = null!;
+        public DbSet<HabitReminder> HabitReminders { get; set; } = null!;
+
+        // MODUŁ 4: DAILY REVIEW
+        public DbSet<TimeCategory> TimeCategories { get; set; } = null!;
+        public DbSet<TimeBlock> TimeBlocks { get; set; } = null!;
+        public DbSet<TimeBlockTemplate> TimeBlockTemplates { get; set; } = null!;
+        public DbSet<TimeBlockTemplateItem> TimeBlockTemplateItems { get; set; } = null!;
+        public DbSet<DailyReviewStatus> DailyReviewStatuses { get; set; } = null!;
+
+        // MODUŁ 5: POMODORO
+        public DbSet<PomodoroSetting> PomodoroSettings { get; set; } = null!;
+        public DbSet<PomodoroSession> PomodoroSessions { get; set; } = null!;
+        public DbSet<PomodoroTemplate> PomodoroTemplates { get; set; } = null!;
+        public DbSet<PomodoroStat> PomodoroStats { get; set; } = null!;
+
+        // MODUŁ 6: REPORTS
+        public DbSet<ReportTemplate> ReportTemplates { get; set; } = null!;
+        public DbSet<GeneratedReport> GeneratedReports { get; set; } = null!;
+        public DbSet<ExportHistory> ExportHistory { get; set; } = null!;
+
+        // MODUŁ 7: SYSTEM
+        public DbSet<SystemSetting> SystemSettings { get; set; } = null!;
+        public DbSet<ErrorLog> ErrorLogs { get; set; } = null!;
+        public DbSet<AuditTrail> AuditTrails { get; set; } = null!;
+
+        // ===================================================================
+        // 2. Konfiguracja Modelu (Relacje, Unikalność, Długości)
+        // ===================================================================
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Konfiguracja User
+            // --- KONFIGURACJA USERS (0) ---
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
                 entity.HasIndex(e => e.Email).IsUnique();
-                entity.Property(e => e.Username).IsRequired().HasMaxLength(50);
                 entity.HasIndex(e => e.Username).IsUnique();
-                entity.Property(e => e.FirstName).HasMaxLength(50);
-                entity.Property(e => e.LastName).HasMaxLength(50);
+                entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Username).IsRequired().HasMaxLength(50);
             });
 
-            // Konfiguracja Task
+
+            // --- MODUŁ 1: USER & PROFILES ---
+
+            // 1. UserProfile (One-to-One)
+            modelBuilder.Entity<UserProfile>(entity =>
+            {
+                // Wymuszanie relacji 1:1 przez unikalny klucz obcy
+                entity.HasIndex(e => e.UserId).IsUnique();
+                entity.HasOne(e => e.User)
+                    .WithOne() // W encji User nie mamy jawnej kolekcji dla UserProfile
+                    .HasForeignKey<UserProfile>(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // 2. UserSettings (One-to-One)
+            modelBuilder.Entity<UserSettings>(entity =>
+            {
+                entity.HasIndex(e => e.UserId).IsUnique();
+                entity.HasOne(e => e.User)
+                    .WithOne()
+                    .HasForeignKey<UserSettings>(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // 5. UserStat (One-to-One)
+            modelBuilder.Entity<UserStat>(entity =>
+            {
+                entity.HasIndex(e => e.UserId).IsUnique();
+                entity.HasOne(e => e.User)
+                    .WithOne()
+                    .HasForeignKey<UserStat>(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // 3. Notifications, 4. ActivityLogs - Standard Many-to-One (User has many)
+            modelBuilder.Entity<Notification>(e => e.Property(n => n.Title).HasMaxLength(255));
+            modelBuilder.Entity<ActivityLog>(e => e.Property(n => n.Action).HasMaxLength(100));
+
+
+            // --- MODUŁ 2: TASKS ---
+
+            // 7. Tasks (Self-Referencing i relacje)
             modelBuilder.Entity<Domain.Entities.Task>(entity =>
             {
-                entity.HasKey(e => e.Id);
                 entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
-                entity.Property(e => e.Description).HasMaxLength(1000);
 
-                // Relacja: User -> Tasks
-                entity.HasOne(e => e.User)
-                    .WithMany(u => u.Tasks)
-                    .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                // Relacja Self-Referencing dla subtasków
+                entity.HasOne(d => d.ParentTask)
+                    .WithMany(p => p.Subtasks)
+                    .HasForeignKey(d => d.ParentTaskId)
+                    .OnDelete(DeleteBehavior.SetNull); // Domyślnie CASCADE, SetNull jest bezpieczniejszy
+
+                // Relacje do TaskCategory i TaskPriority
+                entity.HasOne(d => d.Category).WithMany(c => c.Tasks).HasForeignKey(d => d.CategoryId).OnDelete(DeleteBehavior.SetNull);
+                entity.HasOne(d => d.Priority).WithMany(p => p.Tasks).HasForeignKey(d => d.PriorityId).OnDelete(DeleteBehavior.SetNull);
+
+                // Relacja do User (pomijamy dla Task, bo już jest w User.cs, ale dodajemy OnDelete)
+                entity.HasOne(d => d.User).WithMany(u => u.Tasks).HasForeignKey(d => d.UserId).OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Konfiguracja Habit
+            // 6. TaskCategories, 8. TaskPriorities - Standardowe tabele słownikowe
+            modelBuilder.Entity<TaskCategory>(e => e.Property(c => c.Name).IsRequired().HasMaxLength(100));
+            modelBuilder.Entity<TaskPriority>(e => e.Property(p => p.Name).IsRequired().HasMaxLength(50));
+
+            // 9. RecurringTaskTemplates
+            modelBuilder.Entity<RecurringTaskTemplate>(e => e.Property(t => t.Title).IsRequired().HasMaxLength(200));
+
+            // 10. RecurringTaskInstances (Klucz złożony na FK)
+            modelBuilder.Entity<RecurringTaskInstance>(entity =>
+            {
+                entity.HasIndex(e => new { e.TemplateId, e.ScheduledDate }).IsUnique();
+            });
+
+            // 12. TaskHistory - FK do ChangedBy (User)
+            modelBuilder.Entity<TaskHistory>(entity =>
+            {
+                entity.HasOne(d => d.User)
+                    .WithMany() // Nie musi mieć kolekcji w User
+                    .HasForeignKey(d => d.ChangedBy)
+                    .OnDelete(DeleteBehavior.Restrict); // Nie kasujemy historii przy kasowaniu usera
+            });
+
+
+            // --- MODUŁ 3: HABITS ---
+
+            // 14. Habits (Relacje)
             modelBuilder.Entity<Habit>(entity =>
             {
-                entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
-                entity.Property(e => e.Description).HasMaxLength(500);
-                entity.Property(e => e.Icon).HasMaxLength(10);
-                entity.Property(e => e.Color).HasMaxLength(7);
-
-                // Relacja: User -> Habits
-                entity.HasOne(e => e.User)
-                    .WithMany(u => u.Habits)
-                    .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(d => d.Category).WithMany(c => c.Habits).HasForeignKey(d => d.CategoryId).OnDelete(DeleteBehavior.SetNull);
+                // Relacja Many-to-One do User jest w User.cs
             });
 
-            // Konfiguracja HabitCompletion
-            modelBuilder.Entity<HabitCompletion>(entity =>
+            // 17. HabitStreaks (One-to-One)
+            modelBuilder.Entity<HabitStreak>(entity =>
             {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Note).HasMaxLength(500);
-
-                // Relacja: Habit -> Completions
+                entity.HasIndex(e => e.HabitId).IsUnique();
                 entity.HasOne(e => e.Habit)
-                    .WithMany(h => h.Completions)
-                    .HasForeignKey(e => e.HabitId)
+                    .WithOne(h => h.Streak)
+                    .HasForeignKey<HabitStreak>(e => e.HabitId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Konfiguracja PomodoroSession
-            modelBuilder.Entity<PomodoroSession>(entity =>
+            // 15. HabitSchedules (Klucz złożony na FK)
+            modelBuilder.Entity<HabitSchedule>(entity =>
             {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Note).HasMaxLength(500);
+                entity.HasIndex(e => new { e.HabitId, e.DayOfWeek }).IsUnique();
+            });
 
-                // Relacja: User -> PomodoroSessions
+
+            // --- MODUŁ 4: DAILY REVIEW ---
+
+            // 19. TimeCategories
+            modelBuilder.Entity<TimeCategory>(e => e.Property(c => c.Name).IsRequired().HasMaxLength(100));
+
+            // 20. TimeBlocks (Relacje)
+            modelBuilder.Entity<TimeBlock>(entity =>
+            {
+                entity.HasOne(d => d.Category).WithMany(c => c.TimeBlocks).HasForeignKey(d => d.CategoryId).OnDelete(DeleteBehavior.Restrict); // Nie kasuj kategorii po usunięciu TimeBlock
+                entity.HasOne(d => d.Task).WithMany().HasForeignKey(d => d.TaskId).OnDelete(DeleteBehavior.SetNull);
+                // W TimeBlock usunięto pola string Category i Color na rzecz FK
+            });
+
+            // 23. DailyReviewStatus (Klucz złożony/Unikalny Index)
+            modelBuilder.Entity<DailyReviewStatus>(entity =>
+            {
+                entity.HasIndex(e => new { e.UserId, e.ReviewDate }).IsUnique();
+            });
+
+
+            // --- MODUŁ 5: POMODORO ---
+
+            // 24. PomodoroSettings (One-to-One)
+            modelBuilder.Entity<PomodoroSetting>(entity =>
+            {
+                entity.HasIndex(e => e.UserId).IsUnique();
                 entity.HasOne(e => e.User)
-                    .WithMany(u => u.PomodoroSessions)
-                    .HasForeignKey(e => e.UserId)
+                    .WithOne()
+                    .HasForeignKey<PomodoroSetting>(e => e.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
 
-                // Opcjonalna relacja do Task
-                entity.HasOne(e => e.Task)
+            // 27. PomodoroStats (Klucz złożony/Unikalny Index)
+            modelBuilder.Entity<PomodoroStat>(entity =>
+            {
+                entity.HasIndex(e => new { e.UserId, e.Date }).IsUnique();
+            });
+
+            // 25. PomodoroSessions - Relacja do Task jest już zdefiniowana w Twoim kodzie, więc zostawiamy.
+            // Upewnij się, że usunąłeś stary 'public DbSet<Domain.Entities.Task> Tasks { get; set; }'
+            // z Twojej implementacji, jeśli nie używasz using SecondBrain.Domain.Entities.
+
+            // --- MODUŁ 7: SYSTEM ---
+
+            // 31. SystemSettings (Unikalny klucz)
+            modelBuilder.Entity<SystemSetting>(entity =>
+            {
+                entity.HasIndex(e => e.SettingKey).IsUnique();
+                entity.Property(e => e.SettingKey).IsRequired().HasMaxLength(100);
+
+                entity.HasOne(d => d.UpdatedByUser) // Zgodnie z encją
                     .WithMany()
-                    .HasForeignKey(e => e.TaskId)
+                    .HasForeignKey(d => d.UpdatedBy)
                     .OnDelete(DeleteBehavior.SetNull);
             });
 
-            // Konfiguracja TimeBlock
-            modelBuilder.Entity<TimeBlock>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Activity).IsRequired().HasMaxLength(200);
-                entity.Property(e => e.Description).HasMaxLength(500);
-                entity.Property(e => e.Category).HasMaxLength(50);
-                entity.Property(e => e.Color).HasMaxLength(7);
-
-                // Relacja: User -> TimeBlocks
-                entity.HasOne(e => e.User)
-                    .WithMany(u => u.TimeBlocks)
-                    .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
-            });
+            // 33. AuditTrail
+            modelBuilder.Entity<AuditTrail>(e => e.Property(a => a.Action).HasMaxLength(50));
         }
 
         // Automatyczne ustawianie CreatedAt i UpdatedAt
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            foreach (var entry in ChangeTracker.Entries<Domain.Common.BaseEntity>())
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
             {
                 switch (entry.State)
                 {
                     case EntityState.Added:
                         entry.Entity.CreatedAt = DateTime.UtcNow;
+                        entry.Entity.UpdatedAt = DateTime.UtcNow; // Dodane, aby UpdatedAt nie był null przy tworzeniu
                         break;
                     case EntityState.Modified:
                         entry.Entity.UpdatedAt = DateTime.UtcNow;

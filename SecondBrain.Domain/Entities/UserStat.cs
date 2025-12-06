@@ -18,8 +18,6 @@ namespace SecondBrain.Domain.Entities
         public int LongestHabitStreak { get; set; } = 0;
         public DateTime? LastActivityDate { get; set; }
 
-        // Pole UpdatedAt w BaseEntity powinno wystarczyć, ale zostawiamy dla spójności ze schematem
-        // public DateTime UpdatedAt { get; set; } 
 
         // Relacja nawigacyjna jeden-do-jednego
         public User User { get; set; } = null!;
