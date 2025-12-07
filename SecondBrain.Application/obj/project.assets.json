@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {}
+    "net8.0": {
+      "SecondBrain.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/SecondBrain.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SecondBrain.Domain.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "SecondBrain.Domain/1.0.0": {
+      "type": "project",
+      "path": "../SecondBrain.Domain/SecondBrain.Domain.csproj",
+      "msbuildProject": "../SecondBrain.Domain/SecondBrain.Domain.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net8.0": []
+    "net8.0": [
+      "SecondBrain.Domain >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\mankf\\.nuget\\packages\\": {},
@@ -39,7 +58,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\mankf\\Desktop\\Inżynier\\SecondBrain\\SecondBrain.Domain\\SecondBrain.Domain.csproj": {
+              "projectPath": "C:\\Users\\mankf\\Desktop\\Inżynier\\SecondBrain\\SecondBrain.Domain\\SecondBrain.Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

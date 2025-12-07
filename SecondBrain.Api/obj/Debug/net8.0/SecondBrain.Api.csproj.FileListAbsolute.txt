@@ -142,3 +142,5 @@ C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Api\bin\Debug\net8.0\ru
 C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Api\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Api\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Api\bin\Debug\net8.0\SecondBrain.Application.dll
+C:\Users\mankf\Desktop\Inżynier\SecondBrain\SecondBrain.Api\bin\Debug\net8.0\SecondBrain.Application.pdb

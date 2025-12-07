@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SecondBrain.Application\SecondBrain.Application.csproj" />
     <ProjectReference Include="..\SecondBrain.Infrastructure\SecondBrain.Infrastructure.csproj" />
   </ItemGroup>
 

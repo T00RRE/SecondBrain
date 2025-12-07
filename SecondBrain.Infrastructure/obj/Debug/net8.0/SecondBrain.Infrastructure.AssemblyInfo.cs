@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SecondBrain.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a21e721333a34b8504b1514588cec5d7c7554dfb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6c069abbf8f5165965ee619c95aff0bb5133d3cd")]
 [assembly: System.Reflection.AssemblyProductAttribute("SecondBrain.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SecondBrain.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SecondBrain.Application\SecondBrain.Application.csproj" />
     <ProjectReference Include="..\SecondBrain.Domain\SecondBrain.Domain.csproj" />
   </ItemGroup>
 

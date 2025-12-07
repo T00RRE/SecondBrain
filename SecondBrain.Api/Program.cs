@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SecondBrain.Infrastructure.Data;
 using SecondBrain.Infrastructure.Data.Seed;
-
+using SecondBrain.Application.Interfaces;
+using SecondBrain.Infrastructure.Repositories;
 namespace SecondBrain.Api
 {
     public class Program
@@ -19,6 +20,8 @@ namespace SecondBrain.Api
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
             SeedDatabase(app);
