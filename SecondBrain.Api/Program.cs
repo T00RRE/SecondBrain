@@ -3,6 +3,7 @@ using SecondBrain.Infrastructure.Data;
 using SecondBrain.Infrastructure.Data.Seed;
 using SecondBrain.Application.Interfaces;
 using SecondBrain.Infrastructure.Repositories;
+using SecondBrain.Application.Services;
 namespace SecondBrain.Api
 {
     public class Program
@@ -22,6 +23,7 @@ namespace SecondBrain.Api
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<ITaskService, TaskService>();
 
             var app = builder.Build();
             SeedDatabase(app);
