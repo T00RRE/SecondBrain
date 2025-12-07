@@ -79,8 +79,6 @@ namespace SecondBrain.Infrastructure.Data
                 entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Username).IsRequired().HasMaxLength(50);
             });
-
-
             // --- MODUŁ 1: USER & PROFILES ---
 
             // 1. UserProfile (One-to-One)
@@ -276,7 +274,6 @@ namespace SecondBrain.Infrastructure.Data
                 entity.HasIndex(e => new { e.UserId, e.ReviewDate }).IsUnique();
                 entity.Property(e => e.ProductiveHours).HasPrecision(18, 2);
             });
-
 
             // --- MODUŁ 5: POMODORO ---
 
